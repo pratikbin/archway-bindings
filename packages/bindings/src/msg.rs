@@ -1,11 +1,15 @@
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{CosmosMsg, CustomMsg};
+use cosmwasm_std::{Coin, CosmosMsg, CustomMsg};
 
 #[cw_serde]
 pub enum ArchwayMsg {
     UpdateContractMetadata {
         owner_address: Option<String>,
         rewards_address: Option<String>,
+    },
+    SetFlatFee {
+        contract_address: Option<String>,
+        flat_fee_amount: Coin,
     },
     WithdrawRewards {
         records_limit: Option<u64>,
@@ -33,6 +37,13 @@ impl ArchwayMsg {
         ArchwayMsg::UpdateContractMetadata {
             owner_address: None,
             rewards_address: Some(rewards_address.into()),
+        }
+    }
+
+    pub fn set_flat_fee(contract_address: impl Into<String>, amount: Coin) -> Self {
+        ArchwayMsg::SetFlatFee {
+            contract_address: Some(contract_address.into()),
+            flat_fee_amount: amount,
         }
     }
 
